@@ -11,6 +11,10 @@ void curses_init()
     noecho();                       // Don't echo keystrokes
     cbreak();                       // Disable line buffering
     keypad(stdscr, true);           // Enable special keys to be recorded
+    scrollok(stdscr, true);
+
+    //JOE - COLOR TIME
+    start_color();
 }
 
 int main(int argc, char* argv[])
@@ -33,6 +37,7 @@ int main(int argc, char* argv[])
     {
         ed.updateStatus();
         ed.printStatusLine();
+	      ed.printLineNumbers();
         ed.printBuff();
         int input = getch();        // Blocking until input
         ed.handleInput(input);
