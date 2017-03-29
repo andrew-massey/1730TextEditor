@@ -12,7 +12,7 @@ using namespace std;
 void curses_init()
 {
 
-    //initscr();                      // Start ncurses mode
+    initscr();                      // Start ncurses mode
     noecho();                       // Don't echo keystrokes
     cbreak();                       // Disable line buffering
     keypad(stdscr, true);           // Enable special keys to be recorded
@@ -24,7 +24,6 @@ void curses_init()
  */
 int main(int argc, char* argv[])
 {
-  WINDOW* s = initscr();
   curses_init();
   string fn = "";
     int count = 0;
