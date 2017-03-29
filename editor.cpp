@@ -212,7 +212,7 @@ void Editor::handleInput(int c)
 	    moveDown();
 	    break;
 	  }
-	else if (buff->lines[topLineNum + y - Y_MARGIN].length() == (unsigned int)(COLS - X_MARGIN))
+	else if (buff->lines[topLineNum + y - Y_MARGIN].length() == (unsigned int)(COLS - 1 - X_MARGIN))
 	  {
 	    break; //JOE - Simplest solution to fixing stuff going to the next line weirdly - just don't do it!
 	  }
@@ -348,6 +348,7 @@ void Editor::printStatusLine()
   init_pair(2, COLOR_BLACK, COLOR_WHITE);
   wbkgd(bottomBar,COLOR_PAIR(2));
   mvwprintw(bottomBar, 0, 0, status.c_str());
+  wrefresh(bottomBar);
 }
 
 /**
@@ -464,6 +465,7 @@ void Editor::menu(){
     Editor::opener = s;
     mode ='x';
     werase(menu);
+    wrefresh(menu);
     refresh(); 
     return;
 	  break;}
@@ -490,10 +492,11 @@ void Editor::menu(){
 		  {
 		    break;
 		}
-		else
+    else
 		  {
-		    wprintw(menu,&ch);
+		    mvwprintw(menu,16,w,&ch);
 		    s+=ch;
+        w++;
 		    wrefresh(menu);
 		    refresh();
 		  }
@@ -505,7 +508,7 @@ void Editor::menu(){
 	    break;
 	  }
 	  //exit program
-	case '4':
+	case '4': 
 	  endwin();
 	  exit(EXIT_SUCCESS);
 	  break;
