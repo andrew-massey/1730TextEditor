@@ -27,6 +27,7 @@ int main(int argc, char* argv[])
   WINDOW* s = initscr();
   curses_init();
   string fn = "";
+    int count = 0;
   Editor::opener = "";
   if(argc > 1)
     fn = argv[1];
@@ -62,7 +63,7 @@ int main(int argc, char* argv[])
   }
   catch(exception e){ed.errWin(e);}
   }
-  while(1);
+  while(count<20);
   refresh();                      // Refresh display
   endwin();                       // End ncurses mode
   
