@@ -1,51 +1,63 @@
 #include <ncurses.h>
 #include <string>
+#include <cstdlib>
 
 #include "Editor.h"
 
 using namespace std;
 
+/**
+ * Initialize the curses display.
+ */
 void curses_init()
 {
+
     initscr();                      // Start ncurses mode
     noecho();                       // Don't echo keystrokes
     cbreak();                       // Disable line buffering
     keypad(stdscr, true);           // Enable special keys to be recorded
-    scrollok(stdscr, true);
-
-    //JOE - COLOR TIME
     start_color();
 }
 
+/**
+ * Main program entry. Accepts a filename as an argument.
+ */
 int main(int argc, char* argv[])
 {
-    Editor ed;
-    string fn = "";
-    if(argc > 1)
+  curses_init();
+  string fn = "";
+  Editor::opener = "";
+  if(argc > 1)
+    fn = argv[1];
+  do
+  {
+    Editor ed(fn);
+  
+  //Keep going until we're done
+  while(ed.getMode() != 'x')
     {
-        fn = argv[1];               // Set the filename
-        ed = Editor(fn);
+      try{
+      ed.updateStatus();
+      ed.printStatusLine();
+      ed.printLineNumbers();
+      ed.drawTopBar();
+      ed.printBuff();
+      int input = getch();        // Blocking until input
+      ed.handleInput(input);
+      }
+      catch(exception e){
+        ed.errWin(e); 
+        continue;
+      }
+
     }
-    else
-    {
-        ed = Editor();
-    }
-
-    curses_init();                  // Initialize ncurses
-
-    while(ed.getMode() != 'x')
-    {
-        ed.updateStatus();
-        ed.printStatusLine();
-	      ed.printLineNumbers();
-        ed.printBuff();
-        int input = getch();        // Blocking until input
-        ed.handleInput(input);
-    }
-
-
-    refresh();                      // Refresh display
-    endwin();                       // End ncurses mode
-    return 0;
+    try{
+  fn = Editor::opener;
+}catch(exception e){ed.errWin(e);}}
+  while(1);
+  refresh();                      // Refresh display
+  endwin();                       // End ncurses mode
+  
+  return EXIT_SUCCESS;
 }
 
