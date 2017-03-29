@@ -63,6 +63,7 @@ int main(int argc, char* argv[])
   }
   catch(exception e){ed.errWin(e);}
   }
+    count++;
   while(count<20);
   refresh();                      // Refresh display
   endwin();                       // End ncurses mode
